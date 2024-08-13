@@ -38,17 +38,9 @@ window.onload = () => {
         document.getElementById('address-input').value = address;
     }
 
-    const welcomeMessage = `=== Welcome to the Oracle Loan dApp ===\n` +
-                           `This site allows you to interact with the Oracle Loan smart contract\n\n` +
-                           `Smart contract address: ${oracleLoanContract}\n\n` +
-                           `To obtain a loan, you first need to propose an oracle, get it approved by someone in the review committee, and pay the oracle fee (5% of the owner deposit)\n\n` +
-                           `For your oracle to be proposed successfully, it needs to:\n` +
-                           `- have the smart contract address (the one above) as the refund address\n` +
-                           `- have no owner fee set\n` +
-                           `- start within the next 2 weeks\n` +
-                           `- have a maximum duration of approximately 4 weeks once started (120960 blocks)\n\n` +
-                           `To get your oracle approved, you can ask a member of the review committee to approve it on the official Idena discord server (https://discord.gg/idena-community-634481767352369162)\n\n` +
-                           `After you pay the fee, your oracle will receive the deposit necessary to start it (you still need to launch it manually)\n\n`;
+    let welcomeMessage = document.getElementById('output-console').value;
+    welcomeMessage = welcomeMessage.replace("[INSERT_SMART_CONTRACT_ADDRESS_HERE]", oracleLoanContract);
+    utils.clearConsole();
     utils.print(welcomeMessage, showDate = false);
 }
 

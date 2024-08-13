@@ -95,7 +95,23 @@
             </div>
         </div>
         <div id="output">
-            <textarea type="text" id="output-console" readonly></textarea>
+            <textarea type="text" id="output-console" readonly>=== Welcome to the Oracle Loan dApp ===
+This site allows you to interact with the Oracle Loan smart contract
+
+Smart contract address: [INSERT_SMART_CONTRACT_ADDRESS_HERE]
+
+To obtain a loan, you first need to propose an oracle, get it approved by someone in the review committee, and pay the oracle fee (5% of the owner deposit)
+
+For your oracle to be proposed successfully, it needs to:
+- have the smart contract address (the one above) as the refund address
+- have no owner fee set
+- start within the next 2 weeks
+- have a maximum duration of approximately 4 weeks once started (120960 blocks)
+
+To get your oracle approved, you can ask a member of the review committee to approve it on the official Idena discord server (https://discord.gg/idena-community-634481767352369162)
+
+After you pay the fee, your oracle will receive the deposit necessary to start it (you still need to launch it manually)
+            </textarea>
             <button id="clear-button" onclick="module.clearConsole()">Clear</button>
         </div>
     </main>
