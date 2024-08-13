@@ -1,4 +1,5 @@
 const oracleLoanContract = "0x4978a3a5e83e851e202ea84ad6f2739cc2f46405"; //"0x817b9233fA2E58775F70ABe69ffcf6bAa0D9ADdb"; - testing contracts
+const callback_url = "https://oracle-loan.idena.cloud";
 
 function hexToString(hex) {
     hex = hex.replace(/^0x/, '');
@@ -31,7 +32,7 @@ function validateAddress(address){
 }
 
 function generateDnaLink(tx){
-    return `https://app.idena.io/dna/raw?tx=${tx}&callback_format=html&callback_url=${'http://localhost:8000'}`;
+    return `https://app.idena.io/dna/raw?tx=${tx}&callback_format=html&callback_url=${callback_url}`;
 }
 
 module.exports = {
