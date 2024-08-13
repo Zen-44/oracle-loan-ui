@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./resources/js/bundle.js"></script>
+    <link rel="stylesheet" href="./resources/styles/index.css">
+    <link rel="icon" href="./resources/favicon.ico">
+    <title>Oracle Loan Tools</title>
+</head>
+<body>
+    <header>
+        <img src="./resources/logo.png" alt="Oracle Loan Tools" style="width: 90px; height: 90px;">
+        <div id="url">
+            <input type="text" id="url-input" value="https://restricted.idena.io">
+        </div>
+        <div id="key">
+            <input type="text" id="key-input" value="idena-restricted-node-key">
+        </div>
+        <div id="address">
+            <input type="text" id="address-input" placeholder="Your address">
+        </div>
+    </header>
+    <main>
+        <div id="inputs">
+            <div class="accordion">
+                <input type="checkbox" id="accordion-toggle-1" class="accordion-toggle">
+                <label for="accordion-toggle-1" class="accordion-title">Get balance</label>
+                <div id="accordion-content-get-balance" class="accordion-content">
+                    <span>Address</span>
+                    <input type="text" id="balance-input" placeholder="Enter your address">
+                    <button id="balance-button" onclick="module.getBalanceButton()">Get balance</button>
+                </div>
+            </div>
+            <div class="accordion">
+                <input type="checkbox" id="accordion-toggle-2" class="accordion-toggle">
+                <label for="accordion-toggle-2" class="accordion-title">Deposit</label>
+                <div id="accordion-content-deposit" class="accordion-content">
+                    <span>Amount</span>
+                    <input type="text" id="deposit-input" placeholder="Enter the amount">
+                    <button id="deposit-button" onclick="module.depositButton()">Deposit</button>
+                </div>
+            </div>
+            <div class="accordion">
+                <input type="checkbox" id="accordion-toggle-3" class="accordion-toggle">
+                <label for="accordion-toggle-3" class="accordion-title">Withdraw</label>
+                <div id="accordion-content-withdraw" class="accordion-content">
+                    <span>Amount</span>
+                    <input type="text" id="withdraw-input" placeholder="Enter the amount">
+                    <button id="withdraw-button" onclick="module.withdrawButton()">Withdraw</button>
+                </div>
+            </div>
+            <div class="accordion">
+                <input type="checkbox" id="accordion-toggle-4" class="accordion-toggle">
+                <label for="accordion-toggle-4" class="accordion-title">Propose oracle</label>
+                <div id="accordion-content-propose-oracle" class="accordion-content">
+                    <span>Address</span>
+                    <input type="text" id="propose-oracle-input" placeholder="Enter the oracle address">
+                    <button id="propose-oracle-button" onclick="module.proposeOracleButton()">Propose oracle</button>
+                </div>
+            </div>
+            <div class="accordion">
+                <input type="checkbox" id="accordion-toggle-5" class="accordion-toggle">
+                <label for="accordion-toggle-5" class="accordion-title">Pay oracle fee</label>
+                <div id="accordion-content-pay-oracle-fee" class="accordion-content">
+                    <span>Address</span>
+                    <input type="text" id="pay-oracle-fee-input" placeholder="Enter the oracle address">
+                    <button id="pay-oracle-fee-button" onclick="module.payOracleFeeButton()">Pay fee</button>
+                </div>
+            </div>
+            <div class="accordion">
+                <input type="checkbox" id="accordion-toggle-6" class="accordion-toggle">
+                <label for="accordion-toggle-6" class="accordion-title">Get oracle data</label>
+                <div id="accordion-content-get-oracle-data" class="accordion-content">
+                    <span>Address</span>
+                    <input type="text" id="get-oracle-data-input" placeholder="Enter the oracle address">
+                    <button id="get-oracle-data-button" onclick="module.getOracleDataButton()">Get data</button>
+                </div>
+            </div>
+            <div class="accordion">
+                <input type="checkbox" id="accordion-toggle-7" class="accordion-toggle">
+                <label for="accordion-toggle-7" class="accordion-title">Get review committee</label>
+                <div id="accordion-content-get-review-committee" class="accordion-content">
+                    <button id="approve-oracle-button" onclick="module.getReviewCommitteeButton()">Get review committee</button>
+                </div>
+            </div>
+            <div class="accordion">
+                <input type="checkbox" id="accordion-toggle-8" class="accordion-toggle">
+                <label for="accordion-toggle-8" class="accordion-title">Approve oracle</label>
+                <div id="accordion-content-approve-oracle" class="accordion-content">
+                    <span>Address</span>
+                    <input type="text" id="approve-oracle-input" placeholder="Enter the oracle address">
+                    <button id="approve-oracle-button" onclick="module.approveOracleButton()">Approve oracle</button>
+                </div>
+            </div>
+        </div>
+        <div id="output">
+            <textarea type="text" id="output-console" readonly></textarea>
+            <button id="clear-button" onclick="module.clearConsole()">Clear</button>
+        </div>
+    </main>
+</body>
+</html>
