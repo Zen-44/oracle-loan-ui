@@ -139,7 +139,7 @@ async function payOracleFeeButton(){
         return;
     }
 
-    let fee = (oracleData.ownerDeposit / 1e18 * 0.05).toFixed(5);
+    let fee = (oracleData.ownerDeposit / 1e18 * 0.05 + 0.00001).toFixed(5);
     
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, fee, "payOracleFee", [{"index": 0, "format": "hex", "value": oracle}]);
 
