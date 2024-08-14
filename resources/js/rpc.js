@@ -2,12 +2,25 @@ const axios = require('axios');
 const utils = require('./utils.js');
 
 const oracleLoanContract = utils.oracleLoanContract;
+const fallbackNodeUrl = "https://restricted.idena.io"
+const fallbackNodeKey = "idena-restricted-node-key"
 
 async function callRpc(data, url){
-    let res = await axios.post(url, data).then((response) => {
-        return response;
-    })
-    return res;
+    try{
+        let res = await axios.post(url, data).then((response) => {
+            return response;
+        });
+        return res;
+    }
+    catch(error){
+        //utils.print(`Error: ${error}\nFalling back to the restricted node`);
+        console.log(`Error: ${error}\nFalling back to the restricted node`);
+        data.key = fallbackNodeKey;
+        let res = await axios.post(fallbackNodeUrl, data).then((response) => {
+            return response;
+        });
+        return res;
+    }
 }
 
 async function getNonce(address){
