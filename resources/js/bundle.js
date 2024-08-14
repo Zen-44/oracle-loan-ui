@@ -29122,7 +29122,7 @@ module.exports = {
 }
 
 },{"./utils.js":101,"axios":13}],101:[function(require,module,exports){
-const oracleLoanContract = "0x4978a3a5e83e851e202ea84ad6f2739cc2f46405"; //"0x817b9233fA2E58775F70ABe69ffcf6bAa0D9ADdb"; - testing contracts
+const oracleLoanContract = "0x7A891225f9BcA2BeC1B63b9b9B2765186ad501Fd";
 const callback_url = "https://oracle-loan.idena.cloud";
 
 function hexToString(hex) {
