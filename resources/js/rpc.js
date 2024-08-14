@@ -140,7 +140,7 @@ async function verifyOracle(oracle){
     let votingDuration = parseLittleEndianHexToInt(await readValue("votingDuration"));
     let publicVotingDuration = parseLittleEndianHexToInt(await readValue("publicVotingDuration"));
 
-    if (refundRecipient != oracleLoanContract)
+    if (refundRecipient.toLowerCase() != oracleLoanContract.toLowerCase())
         return "Invalid refund recipient";
     if (ownerFee != 0)
         return "Invalid owner fee";

@@ -28926,7 +28926,7 @@ async function approveOracleButton(){
     }
     
     let reviewCommittee = await rpc.getReviewCommittee();
-    if (!reviewCommittee.includes(caller)){
+    if (!reviewCommittee.includes(caller.toLowerCase())){
         utils.print("Action: Approve Oracle\nYou are not a member of the review committee");
         return;
     }
@@ -29099,7 +29099,7 @@ async function verifyOracle(oracle){
     let votingDuration = parseLittleEndianHexToInt(await readValue("votingDuration"));
     let publicVotingDuration = parseLittleEndianHexToInt(await readValue("publicVotingDuration"));
 
-    if (refundRecipient != oracleLoanContract)
+    if (refundRecipient.toLowerCase() != oracleLoanContract.toLowerCase())
         return "Invalid refund recipient";
     if (ownerFee != 0)
         return "Invalid owner fee";

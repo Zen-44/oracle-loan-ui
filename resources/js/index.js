@@ -182,7 +182,7 @@ async function approveOracleButton(){
     }
     
     let reviewCommittee = await rpc.getReviewCommittee();
-    if (!reviewCommittee.includes(caller)){
+    if (!reviewCommittee.includes(caller.toLowerCase())){
         utils.print("Action: Approve Oracle\nYou are not a member of the review committee");
         return;
     }
