@@ -165,6 +165,29 @@ async function getSmartContractBalance(){
     });
 }
 
+async function getContractState(){
+    let data = {
+        "method": "contract_readData",
+        "params": [
+            oracleLoanContract,
+            "STATE",
+            null
+        ],
+        "id": 1,
+        "key": localStorage.getItem('key')
+    };
+    return await callRpc(data, localStorage.getItem('url'))
+        .then((response) => {
+            let hexState = response.data.result;
+            let state = utils.hexToString(hexState);
+            return JSON.parse(state);
+        })
+        .catch((error) => {
+            utils.print(`Error: ${error}\n(check the api key)`);
+            return undefined;
+        });
+}
+
 module.exports = {
     callRpc,
     getNonce,
@@ -173,5 +196,6 @@ module.exports = {
     getReviewCommittee,
     getBalance,
     verifyOracle,
-    getSmartContractBalance
+    getSmartContractBalance,
+    getContractState
 }

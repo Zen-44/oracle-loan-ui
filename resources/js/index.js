@@ -3,6 +3,9 @@ const rpc = require("./rpc.js");
 const utils = require("./utils.js");
 const oracleLoanContract = utils.oracleLoanContract;
 
+let feeRate = undefined;
+getFeeRate().then((value) => feeRate = value);
+
 window.onload = () => {
     document.getElementById('url-input').addEventListener('input', () => {
         let url = document.getElementById('url-input').value;
@@ -53,6 +56,11 @@ async function replaceContractAddressAndBalance(){
     detailsBar = detailsBar.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
     detailsBar = detailsBar.replace("[SMART_CONTRACT_BALANCE]", await rpc.getSmartContractBalance());
     document.getElementById('contract-details-bar').innerHTML = detailsBar;
+}
+
+async function getFeeRate(){
+    let state = await rpc.getContractState();
+    return state.feeRate / 100;
 }
 
 async function getBalanceButton(){
@@ -150,7 +158,12 @@ async function payOracleFeeButton(){
         return;
     }
 
-    let fee = (oracleData.ownerDeposit / 1e18 * 0.05 + 0.00001).toFixed(5);
+    if (!feeRate){
+        utils.print("Action: Pay Oracle Fee\nCould not retrieve the fee rate");
+        return;
+    }
+
+    let fee = (oracleData.ownerDeposit / 1e18 * feeRate + 0.00001).toFixed(5);
     
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, fee, "payOracleFee", [{"index": 0, "format": "hex", "value": oracle}]);
 
@@ -171,11 +184,16 @@ async function getOracleDataButton(){
         return;
     }
 
+    if (!feeRate){
+        utils.print("Action: Get Oracle Data\nCould not retrieve the fee rate");
+        return;
+    }
+
     let consoleMessage = `== Oracle Data ==\n` +
                          `Oracle: ${oracle}\n` +
                          `Is oracle approved?: ${oracleData.isApproved ? "Yes" : "No"}\n` +
                          `Is oracle fee paid?: ${oracleData.feePaid ? "Yes" : "No"}\n` +
-                         `Fee required: ${(oracleData.ownerDeposit / 1e18 * 0.05).toFixed(5)} iDNA`;
+                         `Fee required: ${(oracleData.ownerDeposit / 1e18 * feeRate).toFixed(5)} iDNA`;
 
     utils.print(consoleMessage);
 }
