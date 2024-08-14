@@ -152,6 +152,19 @@ async function verifyOracle(oracle){
     return "";
 }
 
+async function getSmartContractBalance(){
+    return await callRpc({
+        "method": "dna_getBalance",
+        "params": [
+            oracleLoanContract
+        ],
+        "id": 1,
+        "key": localStorage.getItem('key')
+    }, localStorage.getItem('url')).then((response) => {
+        return response.data.result.balance;
+    });
+}
+
 module.exports = {
     callRpc,
     getNonce,
@@ -159,5 +172,6 @@ module.exports = {
     getOracleData,
     getReviewCommittee,
     getBalance,
-    verifyOracle
+    verifyOracle,
+    getSmartContractBalance
 }

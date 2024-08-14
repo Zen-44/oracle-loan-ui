@@ -3,9 +3,18 @@ body{
     
 }
 
+a {
+    text-decoration: none;
+    color: #292929;
+}
+
+a:hover {
+    color: #9b9a9a;
+}
+
 main{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
 }
 
@@ -49,6 +58,10 @@ button {
     cursor: pointer;
 }
 
+button:hover {
+    background-color: #e8e8e8;
+}
+
 .accordion{
     margin: 5px;
 }
@@ -64,6 +77,10 @@ button {
     background-color: #f1f1f1;
     border: 1px solid #ccc;
     border-radius: 5px;
+}
+
+.accordion-title:hover {
+    background-color: #e8e8e8;
 }
 
 .accordion-content {
@@ -83,6 +100,27 @@ button {
 
 .result{
     margin: 10px;
+}
+
+#contract-details-bar{
+    display: flex;
+    justify-content: space-around;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#contract-details-bar:hover {
+    background-color: #e8e8e8;
+}
+
+#tools{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 #inputs{

@@ -28782,10 +28782,22 @@ window.onload = () => {
         document.getElementById('address-input').value = address;
     }
 
+    // fill in the smart contract address and balance
+    replaceContractAddressAndBalance();
+}
+
+async function replaceContractAddressAndBalance(){
     let welcomeMessage = document.getElementById('output-console').value;
-    welcomeMessage = welcomeMessage.replace("[INSERT_SMART_CONTRACT_ADDRESS_HERE]", oracleLoanContract);
+    welcomeMessage = welcomeMessage.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
     utils.clearConsole();
     utils.print(welcomeMessage, showDate = false);
+
+    let detailsBar = document.getElementById('contract-details-bar').innerHTML;
+    console.log(detailsBar)
+    detailsBar = detailsBar.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
+    detailsBar = detailsBar.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
+    detailsBar = detailsBar.replace("[SMART_CONTRACT_BALANCE]", await rpc.getSmartContractBalance());
+    document.getElementById('contract-details-bar').innerHTML = detailsBar;
 }
 
 async function getBalanceButton(){
@@ -29111,6 +29123,19 @@ async function verifyOracle(oracle){
     return "";
 }
 
+async function getSmartContractBalance(){
+    return await callRpc({
+        "method": "dna_getBalance",
+        "params": [
+            oracleLoanContract
+        ],
+        "id": 1,
+        "key": localStorage.getItem('key')
+    }, localStorage.getItem('url')).then((response) => {
+        return response.data.result.balance;
+    });
+}
+
 module.exports = {
     callRpc,
     getNonce,
@@ -29118,7 +29143,8 @@ module.exports = {
     getOracleData,
     getReviewCommittee,
     getBalance,
-    verifyOracle
+    verifyOracle,
+    getSmartContractBalance
 }
 
 },{"./utils.js":101,"axios":13}],101:[function(require,module,exports){
