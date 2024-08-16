@@ -73,6 +73,7 @@ button:hover {
 .accordion-title {
     cursor: pointer;
     display: block;
+    user-select: none;
     padding: 10px;
     background-color: #f1f1f1;
     border: 1px solid #ccc;
@@ -86,6 +87,7 @@ button:hover {
 .accordion-content {
     max-height: 0;
     overflow: hidden;
+    user-select: none;
     transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
     padding: 0 10px;
     border: 1px solid #ccc;
