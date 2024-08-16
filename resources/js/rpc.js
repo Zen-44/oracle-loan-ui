@@ -47,6 +47,17 @@ async function getEpoch(){
     return res.data.result.epoch;
 }
 
+async function getFeePerGas(){
+    return await callRpc({
+        method: 'bcn_feePerGas',
+        params: [],
+        id: 1,
+        key: localStorage.getItem('key')
+    }, localStorage.getItem('url')).then((response) => {
+        return response.data.result;
+    });
+}
+
 async function getOracleData(oracle){
     let data = {
         "method": "contract_readMap",
@@ -205,6 +216,7 @@ module.exports = {
     callRpc,
     getNonce,
     getEpoch,
+    getFeePerGas,
     getOracleData,
     getReviewCommittee,
     getBalance,
