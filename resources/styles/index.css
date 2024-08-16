@@ -136,3 +136,42 @@ button:hover {
     height: 500px;
     resize: none;
 }
+
+@media (max-width: 800px) {
+    body {
+        font-size: 14px;
+    }
+
+    header {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    header div {
+        margin-right: 0;
+        margin-bottom: 10px;
+        width: 95%;
+    }
+
+    #contract-details-bar {
+        flex-direction: column;
+        overflow-x: auto;
+    }
+
+    #contract-details-bar span{
+        margin: 5px;
+    }
+
+    #tools {
+        flex-direction: column;
+    }
+
+    #inputs, #output {
+        width: 100%;
+    }
+
+    #output-console {
+        height: 300px;
+    }
+}
