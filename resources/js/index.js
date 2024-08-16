@@ -192,7 +192,7 @@ async function getOracleDataButton(){
     let consoleMessage = `== Oracle Data ==\n` +
                          `Oracle: ${oracle}\n` +
                          `Is oracle approved?: ${oracleData.isApproved ? "Yes" : "No"}\n` +
-                         `Is oracle fee paid?: ${oracleData.feePaid ? "Yes" : "No"}\n` +
+                         `Is oracle funded and has fee paid?: ${oracleData.feePaid && oracleData.isFunded ? "Yes" : "No"}\n` +
                          `Fee required: ${(oracleData.ownerDeposit / 1e18 * feeRate).toFixed(5)} iDNA`;
 
     utils.print(consoleMessage);
