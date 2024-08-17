@@ -42,10 +42,10 @@ window.onload = () => {
     }
 
     // fill in the smart contract address and balance
-    replaceContractAddressAndBalance();
+    populatePlaceholders();
 }
 
-async function replaceContractAddressAndBalance(){
+async function populatePlaceholders(){
     let welcomeMessage = document.getElementById('output-console').value;
     welcomeMessage = welcomeMessage.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
     utils.clearConsole();
@@ -55,6 +55,8 @@ async function replaceContractAddressAndBalance(){
     detailsBar = detailsBar.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
     detailsBar = detailsBar.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
     detailsBar = detailsBar.replace("[SMART_CONTRACT_BALANCE]", await rpc.getSmartContractBalance());
+    detailsBar = detailsBar.replace("[FEE_RATE]", (await getFeeRate()) * 100);
+
     document.getElementById('contract-details-bar').innerHTML = detailsBar;
 }
 
