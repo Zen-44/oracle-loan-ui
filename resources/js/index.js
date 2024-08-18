@@ -131,8 +131,8 @@ async function proposeOracleButton(){
 
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "proposeOracle", [{"index": 0, "format": "hex", "value": oracle}]);
 
-    console.log(utils.generateDnaLink(tx));
-    window.open(utils.generateDnaLink(tx), '_blank');
+    console.log(utils.generateDnaLink(tx, proposedOracle = true));
+    window.open(utils.generateDnaLink(tx, proposedOracle = true), '_blank');
 }
 
 async function payOracleFeeButton(){
