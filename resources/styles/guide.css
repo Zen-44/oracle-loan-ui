@@ -11,10 +11,12 @@ body{
 
 header{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    text-align: center;
     align-items: center;
     width: 100%;
     padding: 10px;
+    margin: 15px;
     box-sizing: border-box;
     border: 1px solid black;
     border-radius: 5px;
@@ -31,7 +33,6 @@ main{
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 10px;
     box-sizing: border-box;
 }
 
@@ -40,14 +41,16 @@ main{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-width: 75%;
+    max-width: 1100px;
     text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #504f4f;
 }
 
 #present-oracle-votes{
     padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #504f4f;
+    width: 100%;
+    border-bottom: 1px solid #504f4f;
 }
 
 a {
@@ -57,4 +60,23 @@ a {
 
 a:hover {
     color: #9b9a9a;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+
+    header span {
+        font-size: 24px;
+    }
+
+    .main-container {
+        max-width: 90%;
+    }
 }
