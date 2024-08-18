@@ -116,27 +116,24 @@
                 </div>
             </div>
             <div id="output">
-                <textarea type="text" id="output-console" readonly>=== Welcome to the Oracle Loan dApp ===
-This site allows you to interact with the Oracle Loan smart contract
+                <div type="text" id="output-console">=== Welcome to the Oracle Loan dApp ===
+                    This site allows you to interact with the Oracle Loan smart contract
 
-Smart contract address: [SMART_CONTRACT_ADDRESS]
+                    Smart contract address: [SMART_CONTRACT_ADDRESS]
 
-To obtain a loan, you first need to propose an oracle, get it approved by someone in the review committee, and pay the oracle fee (according to the fee rate and the amount borrowed)
+                    To obtain a loan, you need to:
+                    - create an oracle (check this guide to make sure you set the correct parameters: <a href="./guide.html" target="_blank">https://oracle-loan.idena.cloud/guide.html</a>)
+                    - propose the oracle using the tools on the left
+                    - obtain approval for your loan (you will be prompted to the discord server after proposing the oracle)
+                    - pay the oracle fee using the tools on the left
+                    - start your oracle from the Idena Client
 
-For your oracle to be proposed successfully, it needs to:
-- have the smart contract address (the one above) as the refund address (owner address)
-- have no owner fee set
-- start within the next 2 weeks
-- have a maximum duration of approximately 4 weeks once started (120960 blocks)
+                    If you need help or have questions you may contact me on:
+                    - Discord: zen_._
+                    - Telegram: <a href="https://t.me/ZenMaster44" target="_blank">@ZenMaster44</a>
 
-To get your oracle approved, you can ask a member of the review committee to approve it on the official Idena discord server (https://discord.gg/idena-community-634481767352369162) channel #oracle-loan
-
-After you pay the fee, your oracle will receive the deposit necessary to start it (you still need to launch it manually)
-
-If you need help or have questions you may contact me on:
-- Discord: zen_._
-- Telegram: @ZenMaster44
-                </textarea>
+                    Idena community discord server: <a href="https://discord.gg/idena-community-634481767352369162" target="_blank">https://discord.gg/idena-community-634481767352369162</a>
+                </div>
                 <button id="clear-button" onclick="module.clearConsole()">Clear</button>
             </div>
         </div>

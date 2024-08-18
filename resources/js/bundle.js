@@ -28790,14 +28790,13 @@ window.onload = () => {
 }
 
 async function populatePlaceholders(){
-    let welcomeMessage = document.getElementById('output-console').value;
+    let welcomeMessage = document.getElementById('output-console').innerHTML;
     welcomeMessage = welcomeMessage.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
     utils.clearConsole();
     utils.print(welcomeMessage, showDate = false);
 
     let detailsBar = document.getElementById('contract-details-bar').innerHTML;
-    detailsBar = detailsBar.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
-    detailsBar = detailsBar.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
+    detailsBar = detailsBar.replace(/\[SMART_CONTRACT_ADDRESS\]/g, oracleLoanContract);
     detailsBar = detailsBar.replace("[SMART_CONTRACT_BALANCE]", await rpc.getSmartContractBalance());
     detailsBar = detailsBar.replace("[FEE_RATE]", (await getFeeRate()) * 100);
 
@@ -28869,7 +28868,7 @@ async function proposeOracleButton(){
 
     let verifyOracleResponse = await rpc.verifyOracle(oracle);
     if (verifyOracleResponse){
-        utils.print(`Action: Propose Oracle\n${verifyOracleResponse}`);
+        utils.print(`Action: Propose Oracle\n${verifyOracleResponse}\nIf you are having issues, check out this oracle creation guide: <a href="./guide.html" target="_blank">https://oracle-loan.idena.cloud/guide.html</a>`);
         return;
     }
 
@@ -29144,11 +29143,11 @@ async function verifyOracle(oracle){
     let publicVotingDuration = parseLittleEndianHexToInt(await readValue("publicVotingDuration"));
 
     if (refundRecipient.toLowerCase() != oracleLoanContract.toLowerCase())
-        return "Invalid refund recipient";
+        return "Invalid refund recipient, the owner address needs to be " + oracleLoanContract;
     if (ownerFee != 0)
-        return "Invalid owner fee";
+        return "Invalid owner fee, it should be set to 0.";
     if (parseInt(startTime, 16) > Date.now() + (60 * 60 * 24 * 14))
-        return "Invalid start time";
+        return "Invalid start time. The oracle can't start more than 14 days in the future, you can come back later with this oracle.";
     if (parseInt(votingDuration) + parseInt(publicVotingDuration) > (60 * 24 * 7 * 4 * 3))
         return "Invalid duration";
 
@@ -29223,14 +29222,16 @@ function print(msg, showDate = true){
     let date = currentDate.toLocaleDateString();
     let time = currentDate.toLocaleTimeString();
 
+    msg = msg.replace(/\n/g, "<br>");
+
     if (showDate)
-        msg = `-----${date} ${time}-----\n${msg}`;
+        msg = `-----${date} ${time}-----<br>${msg}`;
     let outputConsole = document.getElementById('output-console');
-    outputConsole.value = msg + "\n\n" + outputConsole.value;
+    outputConsole.innerHTML = msg + "<br><br>" + outputConsole.innerHTML;
 }
 
 function clearConsole(){
-    document.getElementById('output-console').value = "";
+    document.getElementById('output-console').innerHTML = "";
 }
 
 function validateAddress(address){

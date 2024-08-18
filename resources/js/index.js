@@ -46,14 +46,13 @@ window.onload = () => {
 }
 
 async function populatePlaceholders(){
-    let welcomeMessage = document.getElementById('output-console').value;
+    let welcomeMessage = document.getElementById('output-console').innerHTML;
     welcomeMessage = welcomeMessage.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
     utils.clearConsole();
     utils.print(welcomeMessage, showDate = false);
 
     let detailsBar = document.getElementById('contract-details-bar').innerHTML;
-    detailsBar = detailsBar.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
-    detailsBar = detailsBar.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
+    detailsBar = detailsBar.replace(/\[SMART_CONTRACT_ADDRESS\]/g, oracleLoanContract);
     detailsBar = detailsBar.replace("[SMART_CONTRACT_BALANCE]", await rpc.getSmartContractBalance());
     detailsBar = detailsBar.replace("[FEE_RATE]", (await getFeeRate()) * 100);
 

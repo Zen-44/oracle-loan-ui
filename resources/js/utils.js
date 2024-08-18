@@ -17,14 +17,16 @@ function print(msg, showDate = true){
     let date = currentDate.toLocaleDateString();
     let time = currentDate.toLocaleTimeString();
 
+    msg = msg.replace(/\n/g, "<br>");
+
     if (showDate)
-        msg = `-----${date} ${time}-----\n${msg}`;
+        msg = `-----${date} ${time}-----<br>${msg}`;
     let outputConsole = document.getElementById('output-console');
-    outputConsole.value = msg + "\n\n" + outputConsole.value;
+    outputConsole.innerHTML = msg + "<br><br>" + outputConsole.innerHTML;
 }
 
 function clearConsole(){
-    document.getElementById('output-console').value = "";
+    document.getElementById('output-console').innerHTML = "";
 }
 
 function validateAddress(address){
