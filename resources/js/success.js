@@ -6,8 +6,8 @@ window.onload = () => {
     switch (actionType){
         case "proposeOracle":{
             content.innerHTML = `<h3>Now that your oracle was proposed, you need to obtain approval for your loan.</h3>
-                                <h3>To do this, head to our <a href="https://discord.gg/idena-community-634481767352369162">discord server</a>, channel <a href="https://discord.com/channels/634481767352369162/1273921357918240801">#oracle-loan</a>.</h3>
-                                <h3>Or if you don't like discord, contact <a href="https://t.me/ZenMaster44">@ZenMaster44</a> on Telegram.</h3>`;
+                                <h3>To do this, head to our <a href="https://discord.gg/idena-community-634481767352369162" target="_blank">discord server</a>, channel <a href="https://discord.com/channels/634481767352369162/1273921357918240801" target="_blank">#oracle-loan</a>.</h3>
+                                <h3>Or if you don't like discord, contact <a href="https://t.me/ZenMaster44" target="_blank">@ZenMaster44</a> on Telegram.</h3>`;
             break;
         }
         case "payOracleFee":{
@@ -17,7 +17,7 @@ window.onload = () => {
             break;
         }
         default:{
-            content.innerHTML = `<h3>The transaction was broadcasted to the network!</h3>`;
+            content.innerHTML = `<h3>The transaction was broadcast to the network!</h3>`;
             break;
         }
     }
