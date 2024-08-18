@@ -28830,8 +28830,9 @@ async function depositButton(){
     console.log(caller, amount)
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, amount, "deposit", []);
 
-    console.log(utils.generateDnaLink(tx));
-    window.open(utils.generateDnaLink(tx), '_blank');
+    let dnaLink = utils.generateDnaLink(tx, "deposit");
+    console.log(dnaLink);
+    window.open(dnaLink, '_blank');
 }
 
 async function withdrawButton(){
@@ -28849,8 +28850,9 @@ async function withdrawButton(){
 
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "withdraw", [{"index": 0, "format": "dna", "value": amount}]);
     
-    console.log(utils.generateDnaLink(tx));
-    window.open(utils.generateDnaLink(tx), '_blank');
+    let dnaLink = utils.generateDnaLink(tx, "withdraw");
+    console.log(dnaLink);
+    window.open(dnaLink, '_blank');
 }
 
 async function proposeOracleButton(){
@@ -28874,8 +28876,9 @@ async function proposeOracleButton(){
 
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "proposeOracle", [{"index": 0, "format": "hex", "value": oracle}]);
 
-    console.log(utils.generateDnaLink(tx, proposedOracle = true));
-    window.open(utils.generateDnaLink(tx, proposedOracle = true), '_blank');
+    let dnaLink = utils.generateDnaLink(tx, "proposeOracle");
+    console.log(dnaLink);
+    window.open(dnaLink, '_blank');
 }
 
 async function payOracleFeeButton(){
@@ -28912,8 +28915,9 @@ async function payOracleFeeButton(){
     
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, fee, "payOracleFee", [{"index": 0, "format": "hex", "value": oracle}]);
 
-    console.log(utils.generateDnaLink(tx));
-    window.open(utils.generateDnaLink(tx), '_blank');
+    let dnaLink = utils.generateDnaLink(tx, "payOracleFee");
+    console.log(dnaLink);
+    window.open(dnaLink, '_blank');
 }
 
 async function getOracleDataButton(){
@@ -28969,8 +28973,9 @@ async function approveOracleButton(){
 
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "approveOracle", [{"index": 0, "format": "hex", "value": oracle}]);
 
-    console.log(utils.generateDnaLink(tx));
-    window.open(utils.generateDnaLink(tx), '_blank');
+    let dnaLink = utils.generateDnaLink(tx, "approveOracle");
+    console.log(dnaLink);
+    window.open(dnaLink, '_blank');
 }
 
 module.exports = {
@@ -29204,8 +29209,8 @@ module.exports = {
 
 },{"./utils.js":101,"axios":13}],101:[function(require,module,exports){
 const oracleLoanContract = "0x7A891225f9BcA2BeC1B63b9b9B2765186ad501Fd";
-const callback_url = "https://oracle-loan.idena.cloud";
-const proposedOracleCallback = callback_url + "/success.html";
+const callback_url = "https://oracle-loan.idena.cloud/success.html";
+const proposedOracleCallback = callback_url + "/success.html?var=test";
 
 function hexToString(hex) {
     hex = hex.replace(/^0x/, '');
@@ -29239,8 +29244,8 @@ function validateAddress(address){
     return addressRegex.test(address);
 }
 
-function generateDnaLink(tx, proposedOracle = false){
-    return `https://app.idena.io/dna/raw?tx=${tx}&callback_format=html&callback_url=${proposedOracle ? proposedOracleCallback : callback_url}`;
+function generateDnaLink(tx, actionType){
+    return `https://app.idena.io/dna/raw?tx=${tx}&callback_format=html&callback_url=${callback_url}?action=${actionType}`;
 }
 
 module.exports = {

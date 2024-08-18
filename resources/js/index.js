@@ -86,8 +86,9 @@ async function depositButton(){
     console.log(caller, amount)
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, amount, "deposit", []);
 
-    console.log(utils.generateDnaLink(tx));
-    window.open(utils.generateDnaLink(tx), '_blank');
+    let dnaLink = utils.generateDnaLink(tx, "deposit");
+    console.log(dnaLink);
+    window.open(dnaLink, '_blank');
 }
 
 async function withdrawButton(){
@@ -105,8 +106,9 @@ async function withdrawButton(){
 
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "withdraw", [{"index": 0, "format": "dna", "value": amount}]);
     
-    console.log(utils.generateDnaLink(tx));
-    window.open(utils.generateDnaLink(tx), '_blank');
+    let dnaLink = utils.generateDnaLink(tx, "withdraw");
+    console.log(dnaLink);
+    window.open(dnaLink, '_blank');
 }
 
 async function proposeOracleButton(){
@@ -130,8 +132,9 @@ async function proposeOracleButton(){
 
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "proposeOracle", [{"index": 0, "format": "hex", "value": oracle}]);
 
-    console.log(utils.generateDnaLink(tx, proposedOracle = true));
-    window.open(utils.generateDnaLink(tx, proposedOracle = true), '_blank');
+    let dnaLink = utils.generateDnaLink(tx, "proposeOracle");
+    console.log(dnaLink);
+    window.open(dnaLink, '_blank');
 }
 
 async function payOracleFeeButton(){
@@ -168,8 +171,9 @@ async function payOracleFeeButton(){
     
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, fee, "payOracleFee", [{"index": 0, "format": "hex", "value": oracle}]);
 
-    console.log(utils.generateDnaLink(tx));
-    window.open(utils.generateDnaLink(tx), '_blank');
+    let dnaLink = utils.generateDnaLink(tx, "payOracleFee");
+    console.log(dnaLink);
+    window.open(dnaLink, '_blank');
 }
 
 async function getOracleDataButton(){
@@ -225,8 +229,9 @@ async function approveOracleButton(){
 
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "approveOracle", [{"index": 0, "format": "hex", "value": oracle}]);
 
-    console.log(utils.generateDnaLink(tx));
-    window.open(utils.generateDnaLink(tx), '_blank');
+    let dnaLink = utils.generateDnaLink(tx, "approveOracle");
+    console.log(dnaLink);
+    window.open(dnaLink, '_blank');
 }
 
 module.exports = {
