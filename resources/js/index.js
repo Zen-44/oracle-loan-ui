@@ -125,7 +125,7 @@ async function proposeOracleButton(){
 
     let verifyOracleResponse = await rpc.verifyOracle(oracle);
     if (verifyOracleResponse){
-        utils.print(`Action: Propose Oracle\n${verifyOracleResponse}`);
+        utils.print(`Action: Propose Oracle\n${verifyOracleResponse}\nIf you are having issues, check out this oracle creation guide: <a href="./guide.html" target="_blank">https://oracle-loan.idena.cloud/guide.html</a>`);
         return;
     }
 

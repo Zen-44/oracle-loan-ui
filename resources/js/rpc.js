@@ -154,11 +154,11 @@ async function verifyOracle(oracle){
     let publicVotingDuration = parseLittleEndianHexToInt(await readValue("publicVotingDuration"));
 
     if (refundRecipient.toLowerCase() != oracleLoanContract.toLowerCase())
-        return "Invalid refund recipient";
+        return "Invalid refund recipient, the owner address needs to be " + oracleLoanContract;
     if (ownerFee != 0)
-        return "Invalid owner fee";
+        return "Invalid owner fee, it should be set to 0.";
     if (parseInt(startTime, 16) > Date.now() + (60 * 60 * 24 * 14))
-        return "Invalid start time";
+        return "Invalid start time. The oracle can't start more than 14 days in the future, you can come back later with this oracle.";
     if (parseInt(votingDuration) + parseInt(publicVotingDuration) > (60 * 24 * 7 * 4 * 3))
         return "Invalid duration";
 

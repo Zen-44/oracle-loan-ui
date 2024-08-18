@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle Creation Guide</title>
+    <meta name="description" content="Oracle Loan Tools. This service allows you to borrow iDNA to run oracle votes on the Idena Blockchain.">
+
+    <!-- OGP Tags -->
+    <meta data-rh="true" property="og:type" content="website">
+    <meta data-rh="true" property="og:title" content="Oracle Creation Guide">
+    <meta data-rh="true" property="og:description" content="Oracle Creation guide. This short guide explains how to create an oracle vote on the Idena Blockchain.">
+    <meta data-rh="true" property="og:url" content="https://oracle-loan.idena.cloud">
+    <meta data-rh="true" property="og:image" content="https://oracle-loan.idena.cloud/resources/logo.png">
+
+    <link rel="stylesheet" href="./resources/styles/guide.css">
+    <link rel="icon" href="./resources/favicon.ico">
+</head>
+<body>
+    <header>
+        <a href="."><img src="./resources/logo.png" alt="Oracle Loan Tools" style="width: 90px; height: 90px;"></a>
+        <span>Oracle Vote Creation Guide</span>
+    </header>
+    <main>
+        <div id="present-oracle-votes" class="main-container">
+            <h2>Never heard of Oracle Votes?</h2>
+            <p>You can read this article to find out how oracle votes function: <a href="https://medium.com/@Zen-44/oracle-voting-guide-828f730d8016">https://medium.com/@Zen-44/oracle-voting-guide-828f730d8016</a></p>
+        </div>
+        <div id="important-parameters" class="main-container">
+            <h2>Important parameters for using Oracle Loan tools</h2>
+            <p>Now that you have an idea of how to create an oracle, below you will find some important fields that need to be set in order to obtain a loan</p>
+
+            <h3>1. Committee Size</h3>
+            <p>This determines how many coins you will need to borrow. For example, if you select "Whole network" you will need to loan 5000 iDNA. The price goes down for smaller committees. You can check the price on the field "Owner deposit" (which you can not edit)</p>
+            <img src="./resources/images/committee-size.png" alt="Committee Size">
+
+            <h3>2. Owner Address & Owner Fee</h3>
+            <p>For your oracle to be accepted, the owner address needs to be set to the smart contract address (you can find it on the <a href="https://oracle-loan.idena.cloud" target="_blank">main page</a>)</p>
+            <p>Also, the Owner Fee has to be set to 0 as in the image below.</p>
+            <p>Note: These fields can be found under "Advanced Settings"</p>
+            <img src="./resources/images/owner-address-and-fee.png" alt="Owner Address">
+
+            <h3>3. Vote Duration</h3>
+            <p>The duration of an oracle vote is split into 2 sections: the secret voting (field "Voting Duration") and vote counting (field "Counting Duration")</p>
+            <p>What is important for getting a loan is that: these 2 combined should not last more than 4 weeks. Precisely, if you add up the number of blocks from each field, it should be less than 120960 blocks.</p>
+            <img src="./resources/images/overall-duration.png" alt="Vote Duration">
+
+            <h3>4. Start Date</h3>
+            <p>This field determines the earliest you will be able to start the oracle vote. If you want to set this, it needs to be at most 2 weeks in the future for your oracle to be accepted for a loan.</p>
+            <img src="./resources/images/start-date.png" alt="Start Date">
+        </div>
+        <div id="oracle-submission">
+
+        </div>
+    </main>
+</body>
+</html>
