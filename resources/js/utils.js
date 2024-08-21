@@ -16,7 +16,7 @@ function dnaToFloatString(string, decimals = 18){
     // for some reason dnaToFloatString from idena-sdk-js loses some precision (maybe I didn't use it properly?)
     if (string == "0")
         return "0";
-    
+
     let result;
     if (string.length-decimals <= 0){
         result = "0." + "0".repeat(decimals - string.length) + string;
@@ -26,6 +26,7 @@ function dnaToFloatString(string, decimals = 18){
 
     result = string.slice(0,string.length - decimals) + "." + string.slice(string.length - decimals);
     result = result.replace(/0+$/, ''); // remove trailing zeros
+    result = result.replace(/\.$/, ''); // remove trailing dot
 
     return result;
 }
