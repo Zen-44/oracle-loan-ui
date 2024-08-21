@@ -12,6 +12,38 @@ function hexToString(hex) {
     return str;
 }
 
+function dnaToFloatString(string, decimals = 18){
+    // for some reason dnaToFloatString from idena-sdk-js loses some precision (maybe I didn't use it properly?)
+    if (string == "0")
+        return "0";
+    
+    let result;
+    if (string.length-decimals <= 0){
+        result = "0." + "0".repeat(decimals - string.length) + string;
+        result = result.replace(/0+$/, ''); // remove trailing zeros
+        return result;
+    }
+
+    result = string.slice(0,string.length - decimals) + "." + string.slice(string.length - decimals);
+    result = result.replace(/0+$/, ''); // remove trailing zeros
+
+    return result;
+}
+
+function floatStringToDna(string){
+    let parts = string.split(".");
+    let integerPart = parts[0];
+    let decimalPart = parts[1] || "";
+
+    if (decimalPart.length < 18) {
+        decimalPart += "0".repeat(18 - decimalPart.length);
+    } else if (decimalPart.length > 18) {
+        decimalPart = decimalPart.slice(0, 18);
+    }
+
+    return integerPart + decimalPart;
+}
+
 function print(msg, showDate = true){
     let currentDate = new Date();
     let date = currentDate.toLocaleDateString();
@@ -40,6 +72,8 @@ function generateDnaLink(tx, actionType){
 
 module.exports = {
     hexToString,
+    dnaToFloatString,
+    floatStringToDna,
     print,
     clearConsole,
     validateAddress,

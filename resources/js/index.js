@@ -83,7 +83,6 @@ async function depositButton(){
         return;
     }
     let amount = document.getElementById('deposit-input').value;
-    console.log(caller, amount)
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, amount, "deposit", []);
 
     let dnaLink = utils.generateDnaLink(tx, "deposit");
@@ -99,12 +98,13 @@ async function withdrawButton(){
     }
     let amount = document.getElementById('withdraw-input').value;
 
-    if (await rpc.getBalance(caller) < amount){
+    if (parseFloat(await rpc.getBalance(caller)) < parseFloat(amount)){     // might not work for the smallest units of iDNA
         utils.print("Action: Withdraw\nYou don't have enough balance");
         return;
     }
 
-    let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "withdraw", [{"index": 0, "format": "dna", "value": amount}]);
+    let withdrawArg = [{"index": 0, "format": "bigint", "value": BigInt(utils.floatStringToDna(amount))}];
+    let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "withdraw", withdrawArg);
     
     let dnaLink = utils.generateDnaLink(tx, "withdraw");
     console.log(dnaLink);

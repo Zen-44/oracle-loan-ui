@@ -1,5 +1,6 @@
 const axios = require('axios');
 const utils = require('./utils.js');
+const idena = require('idena-sdk-js');
 
 const oracleLoanContract = utils.oracleLoanContract;
 const fallbackNodeUrl = "https://restricted.idena.io"
@@ -118,7 +119,7 @@ async function getBalance(address){
     };
     return await callRpc(data, localStorage.getItem('url'))
         .then((response) => {
-            let balance = parseInt(response.data.result, 16) / 1e18;
+            let balance = utils.dnaToFloatString(BigInt(response.data.result, 16).toString());
             return balance ? balance : "0";
         })
         .catch((error) => {

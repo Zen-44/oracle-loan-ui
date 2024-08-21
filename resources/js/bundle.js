@@ -28827,7 +28827,6 @@ async function depositButton(){
         return;
     }
     let amount = document.getElementById('deposit-input').value;
-    console.log(caller, amount)
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, amount, "deposit", []);
 
     let dnaLink = utils.generateDnaLink(tx, "deposit");
@@ -28843,12 +28842,13 @@ async function withdrawButton(){
     }
     let amount = document.getElementById('withdraw-input').value;
 
-    if (await rpc.getBalance(caller) < amount){
+    if (parseFloat(await rpc.getBalance(caller)) < parseFloat(amount)){     // might not work for the smallest units of iDNA
         utils.print("Action: Withdraw\nYou don't have enough balance");
         return;
     }
 
-    let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "withdraw", [{"index": 0, "format": "dna", "value": amount}]);
+    let withdrawArg = [{"index": 0, "format": "bigint", "value": BigInt(utils.floatStringToDna(amount))}];
+    let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "withdraw", withdrawArg);
     
     let dnaLink = utils.generateDnaLink(tx, "withdraw");
     console.log(dnaLink);
@@ -28994,6 +28994,7 @@ module.exports = {
 },{"./contract.js":98,"./rpc.js":100,"./utils.js":101}],100:[function(require,module,exports){
 const axios = require('axios');
 const utils = require('./utils.js');
+const idena = require('idena-sdk-js');
 
 const oracleLoanContract = utils.oracleLoanContract;
 const fallbackNodeUrl = "https://restricted.idena.io"
@@ -29112,7 +29113,7 @@ async function getBalance(address){
     };
     return await callRpc(data, localStorage.getItem('url'))
         .then((response) => {
-            let balance = parseInt(response.data.result, 16) / 1e18;
+            let balance = utils.dnaToFloatString(BigInt(response.data.result, 16).toString());
             return balance ? balance : "0";
         })
         .catch((error) => {
@@ -29207,7 +29208,7 @@ module.exports = {
     getContractState
 }
 
-},{"./utils.js":101,"axios":13}],101:[function(require,module,exports){
+},{"./utils.js":101,"axios":13,"idena-sdk-js":78}],101:[function(require,module,exports){
 const oracleLoanContract = "0x7A891225f9BcA2BeC1B63b9b9B2765186ad501Fd";
 const callback_url = "https://oracle-loan.idena.cloud/success.html";
 const proposedOracleCallback = callback_url + "/success.html?var=test";
@@ -29220,6 +29221,38 @@ function hexToString(hex) {
         str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
     }
     return str;
+}
+
+function dnaToFloatString(string, decimals = 18){
+    // for some reason dnaToFloatString from idena-sdk-js loses some precision (maybe I didn't use it properly?)
+    if (string == "0")
+        return "0";
+    
+    let result;
+    if (string.length-decimals <= 0){
+        result = "0." + "0".repeat(decimals - string.length) + string;
+        result = result.replace(/0+$/, ''); // remove trailing zeros
+        return result;
+    }
+
+    result = string.slice(0,string.length - decimals) + "." + string.slice(string.length - decimals);
+    result = result.replace(/0+$/, ''); // remove trailing zeros
+
+    return result;
+}
+
+function floatStringToDna(string){
+    let parts = string.split(".");
+    let integerPart = parts[0];
+    let decimalPart = parts[1] || "";
+
+    if (decimalPart.length < 18) {
+        decimalPart += "0".repeat(18 - decimalPart.length);
+    } else if (decimalPart.length > 18) {
+        decimalPart = decimalPart.slice(0, 18);
+    }
+
+    return integerPart + decimalPart;
 }
 
 function print(msg, showDate = true){
@@ -29250,6 +29283,8 @@ function generateDnaLink(tx, actionType){
 
 module.exports = {
     hexToString,
+    dnaToFloatString,
+    floatStringToDna,
     print,
     clearConsole,
     validateAddress,
