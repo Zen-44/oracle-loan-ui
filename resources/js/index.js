@@ -64,6 +64,10 @@ async function getFeeRate(){
     return state.feeRate / 100;
 }
 
+async function feeForOracle(oracleData){
+    return Math.ceil(parseFloat(oracleData.ownerDeposit) * feeRate / 1e18 * 1000) / 1000;
+}
+
 async function getBalanceButton(){
     let caller = document.getElementById('balance-input').value;
     if (!utils.validateAddress(caller)){
@@ -167,7 +171,7 @@ async function payOracleFeeButton(){
         return;
     }
 
-    let fee = (oracleData.ownerDeposit / 1e18 * feeRate + 0.00001).toFixed(5);
+    let fee = await feeForOracle(oracleData);
     
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, fee, "payOracleFee", [{"index": 0, "format": "hex", "value": oracle}]);
 
@@ -198,7 +202,7 @@ async function getOracleDataButton(){
                          `Oracle: ${oracle}\n` +
                          `Is oracle approved?: ${oracleData.isApproved ? "Yes" : "No"}\n` +
                          `Is oracle funded and has fee paid?: ${oracleData.feePaid && oracleData.isFunded ? "Yes" : "No"}\n` +
-                         `Fee required: ${(oracleData.ownerDeposit / 1e18 * feeRate).toFixed(5)} iDNA`;
+                         `Fee required: ${await feeForOracle(oracleData)} iDNA`;
 
     utils.print(consoleMessage);
 }
