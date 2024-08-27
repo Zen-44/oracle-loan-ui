@@ -238,6 +238,12 @@ async function approveOracleButton(){
         return;
     }
 
+    let oracleStartTime = await rpc.getOracleStartTime(oracle);
+    if (oracleStartTime === undefined || (parseInt(oracleStartTime) + 3 * 7 * 24 * 60 * 60) * 1000 < Date.now()){
+        utils.print("Action: Approve Oracle\nOracle will be terminated in less than a week or doesn't exist :(");
+        return;
+    }
+
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "approveOracle", [{"index": 0, "format": "hex", "value": oracle}]);
 
     let dnaLink = utils.generateDnaLink(tx, "approveOracle");

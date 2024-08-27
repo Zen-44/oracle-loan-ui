@@ -202,6 +202,27 @@ async function getContractState(){
         });
 }
 
+async function getOracleStartTime(oracle){
+    let data = {
+        "method": "contract_readData",
+        "params": [
+            oracle,
+            "startTime",
+            "uint64"
+        ],
+        "id": 1,
+        "key": localStorage.getItem('key')
+    };
+    return await callRpc(data, localStorage.getItem('url'))
+        .then((response) => {
+            return response.data.result;
+        })
+        .catch((error) => {
+            utils.print(`Error: ${error}\n(check the api key)`);
+            return undefined;
+        });
+}
+
 module.exports = {
     callRpc,
     getNonce,
@@ -211,5 +232,6 @@ module.exports = {
     getBalance,
     verifyOracle,
     getSmartContractBalance,
-    getContractState
+    getContractState,
+    getOracleStartTime
 }

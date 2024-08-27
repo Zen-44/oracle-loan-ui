@@ -28982,6 +28982,12 @@ async function approveOracleButton(){
         return;
     }
 
+    let oracleStartTime = await rpc.getOracleStartTime(oracle);
+    if (oracleStartTime === undefined || (parseInt(oracleStartTime) + 3 * 7 * 24 * 60 * 60) * 1000 < Date.now()){
+        utils.print("Action: Approve Oracle\nOracle will be terminated in less than a week or doesn't exist :(");
+        return;
+    }
+
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "approveOracle", [{"index": 0, "format": "hex", "value": oracle}]);
 
     let dnaLink = utils.generateDnaLink(tx, "approveOracle");
@@ -29207,6 +29213,27 @@ async function getContractState(){
         });
 }
 
+async function getOracleStartTime(oracle){
+    let data = {
+        "method": "contract_readData",
+        "params": [
+            oracle,
+            "startTime",
+            "uint64"
+        ],
+        "id": 1,
+        "key": localStorage.getItem('key')
+    };
+    return await callRpc(data, localStorage.getItem('url'))
+        .then((response) => {
+            return response.data.result;
+        })
+        .catch((error) => {
+            utils.print(`Error: ${error}\n(check the api key)`);
+            return undefined;
+        });
+}
+
 module.exports = {
     callRpc,
     getNonce,
@@ -29216,7 +29243,8 @@ module.exports = {
     getBalance,
     verifyOracle,
     getSmartContractBalance,
-    getContractState
+    getContractState,
+    getOracleStartTime
 }
 
 },{"./utils.js":101,"axios":13,"idena-sdk-js":78}],101:[function(require,module,exports){
