@@ -90,7 +90,7 @@ async function getBalanceButton(){
 async function depositButton(){
     let caller = document.getElementById('address-input').value;
     if (!utils.validateAddress(caller)){
-        utils.print("Action: Deposit\nInvalid address");
+        utils.print("Action: Deposit\nYour address is invalid (the address you are making the tx from)");
         return;
     }
     let amount = document.getElementById('deposit-input').value;
@@ -104,7 +104,7 @@ async function depositButton(){
 async function withdrawButton(){
     let caller = document.getElementById('address-input').value;
     if (!utils.validateAddress(caller)){
-        utils.print("Action: Withdraw\nInvalid address");
+        utils.print("Action: Withdraw\nYour address is invalid (the address you are making the tx from)");
         return;
     }
     let amount = document.getElementById('withdraw-input').value;
@@ -125,7 +125,7 @@ async function withdrawButton(){
 async function proposeOracleButton(){
     let caller = document.getElementById('address-input').value;
     if (!utils.validateAddress(caller)){
-        utils.print("Action: Propose Oracle\nInvalid address");
+        utils.print("Action: Propose Oracle\nYour address is invalid (the address you are making the tx from)");
         return;
     }
 
@@ -151,7 +151,7 @@ async function proposeOracleButton(){
 async function payOracleFeeButton(){
     let caller = document.getElementById('address-input').value;
     if (!utils.validateAddress(caller)){
-        utils.print("Action: Pay Oracle Fee\nInvalid address");
+        utils.print("Action: Pay Oracle Fee\nYour address is invalid (the address you are making the tx from)");
         return;
     }
 
@@ -222,7 +222,7 @@ async function getReviewCommitteeButton(){
 async function approveOracleButton(){
     let caller = document.getElementById('address-input').value;
     if (!utils.validateAddress(caller)){
-        utils.print("Action: Approve Oracle\nInvalid address");
+        utils.print("Action: Approve Oracle\nYour address is invalid (the address you are making the tx from)");
         return;
     }
     

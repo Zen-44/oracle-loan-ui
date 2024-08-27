@@ -120,9 +120,9 @@ async function getBalance(address){
     return await callRpc(data, localStorage.getItem('url'))
         .then((response) => {
             if (response.data.error)
-            return balance;
+                return "0";
             let balance = utils.dnaToFloatString(BigInt(response.data.result, 16).toString());
-            return balance ? balance : "0";
+            return balance;
         })
         .catch((error) => {
             utils.print(`Error: ${error}\n(check the api key)`);
