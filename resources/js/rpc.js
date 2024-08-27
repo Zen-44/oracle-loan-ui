@@ -119,6 +119,8 @@ async function getBalance(address){
     };
     return await callRpc(data, localStorage.getItem('url'))
         .then((response) => {
+            if (response.data.error)
+            return balance;
             let balance = utils.dnaToFloatString(BigInt(response.data.result, 16).toString());
             return balance ? balance : "0";
         })
