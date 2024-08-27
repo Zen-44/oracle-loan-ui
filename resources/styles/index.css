@@ -119,6 +119,10 @@ button:hover {
     background-color: #e8e8e8;
 }
 
+.info-bar span{
+    margin: 5px;
+}
+
 #tools{
     display: flex;
     flex-direction: row;

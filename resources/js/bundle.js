@@ -28796,8 +28796,15 @@ async function populatePlaceholders(){
     utils.print(welcomeMessage, showDate = false);
 
     let detailsBar = document.getElementById('contract-details-bar').innerHTML;
+    
     detailsBar = detailsBar.replace(/\[SMART_CONTRACT_ADDRESS\]/g, oracleLoanContract);
-    detailsBar = detailsBar.replace("[SMART_CONTRACT_BALANCE]", await rpc.getSmartContractBalance());
+
+    detailsBar = detailsBar.replace("[SMART_CONTRACT_BALANCE]", parseFloat(await rpc.getSmartContractBalance()).toFixed(4));
+
+    let depositsPool = (await rpc.getContractState()).depositsPool;
+    depositsPool = parseFloat(utils.dnaToFloatString(depositsPool)).toFixed(4);
+    detailsBar = detailsBar.replace("[SMART_CONTRACT_FUND_POOL]", depositsPool);
+
     detailsBar = detailsBar.replace("[FEE_RATE]", (await getFeeRate()) * 100);
 
     document.getElementById('contract-details-bar').innerHTML = detailsBar;
