@@ -28816,7 +28816,9 @@ async function getFeeRate(){
 }
 
 async function feeForOracle(oracleData){
-    return Math.ceil(parseFloat(oracleData.ownerDeposit) * feeRate / 1e18 * 1000) / 1000;
+    let fee = Math.ceil(parseFloat(oracleData.ownerDeposit) * feeRate / 1e18 * 1000) / 1000;
+    fee = fee + 0.01;   // accounts for annoying small errors in floats, i hate floats
+    return fee;
 }
 
 async function getBalanceButton(){
