@@ -142,7 +142,7 @@ async function verifyOracle(oracle){
             "id": 1,
             "key": localStorage.getItem('key')
         }, localStorage.getItem('url')).then((response) => {
-            return response.data.result;
+            return response.data.result || "0x";
         });
     }
 
