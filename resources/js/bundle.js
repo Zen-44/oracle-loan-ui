@@ -28716,7 +28716,7 @@ module.exports = (secp256k1) => {
 const idena = require("idena-sdk-js")
 const rpc = require("./rpc.js")
 
-const maxFee = idena.floatStringToDna("2.0");
+const maxFee = idena.floatStringToDna("5.0");
 
 async function generateCallContractTx(caller, to, amount, method, args) {
     let tx = new idena.Transaction();
