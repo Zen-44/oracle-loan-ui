@@ -28811,25 +28811,39 @@ window.onload = () => {
     }
 
     // fill in the smart contract address and balance
-    replaceContractAddressAndBalance();
+    populatePlaceholders();
 }
 
-async function replaceContractAddressAndBalance(){
-    let welcomeMessage = document.getElementById('output-console').value;
+async function populatePlaceholders(){
+    let welcomeMessage = document.getElementById('output-console').innerHTML;
     welcomeMessage = welcomeMessage.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
     utils.clearConsole();
     utils.print(welcomeMessage, showDate = false);
 
     let detailsBar = document.getElementById('contract-details-bar').innerHTML;
-    detailsBar = detailsBar.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
-    detailsBar = detailsBar.replace("[SMART_CONTRACT_ADDRESS]", oracleLoanContract);
-    detailsBar = detailsBar.replace("[SMART_CONTRACT_BALANCE]", await rpc.getSmartContractBalance());
+    
+    detailsBar = detailsBar.replace(/\[SMART_CONTRACT_ADDRESS\]/g, oracleLoanContract);
+
+    detailsBar = detailsBar.replace("[SMART_CONTRACT_BALANCE]", parseFloat(await rpc.getSmartContractBalance()).toFixed(4));
+
+    let depositsPool = (await rpc.getContractState()).depositsPool;
+    depositsPool = parseFloat(utils.dnaToFloatString(depositsPool)).toFixed(4);
+    detailsBar = detailsBar.replace("[SMART_CONTRACT_FUND_POOL]", depositsPool);
+
+    detailsBar = detailsBar.replace("[FEE_RATE]", (await getFeeRate()) * 100);
+
     document.getElementById('contract-details-bar').innerHTML = detailsBar;
 }
 
 async function getFeeRate(){
     let state = await rpc.getContractState();
     return state.feeRate / 100;
+}
+
+async function feeForOracle(oracleData){
+    let fee = Math.ceil(parseFloat(oracleData.ownerDeposit) * feeRate / 1e18 * 1000) / 1000;
+    fee = fee + 0.01;   // accounts for annoying small errors in floats, i hate floats
+    return fee;
 }
 
 async function getBalanceButton(){
@@ -28847,40 +28861,42 @@ async function getBalanceButton(){
 async function depositButton(){
     let caller = document.getElementById('address-input').value;
     if (!utils.validateAddress(caller)){
-        utils.print("Action: Deposit\nInvalid address");
+        utils.print("Action: Deposit\nYour address is invalid (the address you are making the tx from)");
         return;
     }
     let amount = document.getElementById('deposit-input').value;
-    console.log(caller, amount)
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, amount, "deposit", []);
 
-    console.log(utils.generateDnaLink(tx));
-    window.open(utils.generateDnaLink(tx), '_blank');
+    let dnaLink = utils.generateDnaLink(tx, "deposit");
+    console.log(dnaLink);
+    window.open(dnaLink, '_blank');
 }
 
 async function withdrawButton(){
     let caller = document.getElementById('address-input').value;
     if (!utils.validateAddress(caller)){
-        utils.print("Action: Withdraw\nInvalid address");
+        utils.print("Action: Withdraw\nYour address is invalid (the address you are making the tx from)");
         return;
     }
     let amount = document.getElementById('withdraw-input').value;
 
-    if (await rpc.getBalance(caller) < amount){
+    if (parseFloat(await rpc.getBalance(caller)) < parseFloat(amount)){     // might not work for the smallest units of iDNA
         utils.print("Action: Withdraw\nYou don't have enough balance");
         return;
     }
 
-    let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "withdraw", [{"index": 0, "format": "dna", "value": amount}]);
+    let withdrawArg = [{"index": 0, "format": "bigint", "value": BigInt(utils.floatStringToDna(amount))}];
+    let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "withdraw", withdrawArg);
     
-    console.log(utils.generateDnaLink(tx));
-    window.open(utils.generateDnaLink(tx), '_blank');
+    let dnaLink = utils.generateDnaLink(tx, "withdraw");
+    console.log(dnaLink);
+    window.open(dnaLink, '_blank');
 }
 
 async function proposeOracleButton(){
     let caller = document.getElementById('address-input').value;
     if (!utils.validateAddress(caller)){
-        utils.print("Action: Propose Oracle\nInvalid address");
+        utils.print("Action: Propose Oracle\nYour address is invalid (the address you are making the tx from)");
         return;
     }
 
@@ -28892,20 +28908,21 @@ async function proposeOracleButton(){
 
     let verifyOracleResponse = await rpc.verifyOracle(oracle);
     if (verifyOracleResponse){
-        utils.print(`Action: Propose Oracle\n${verifyOracleResponse}`);
+        utils.print(`Action: Propose Oracle\n${verifyOracleResponse}\nIf you are having issues, check out this oracle creation guide: <a href="./guide.html" target="_blank">https://oracle-loan.idena.cloud/guide.html</a>`);
         return;
     }
 
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "proposeOracle", [{"index": 0, "format": "hex", "value": oracle}]);
 
-    console.log(utils.generateDnaLink(tx));
-    window.open(utils.generateDnaLink(tx), '_blank');
+    let dnaLink = utils.generateDnaLink(tx, "proposeOracle");
+    console.log(dnaLink);
+    window.open(dnaLink, '_blank');
 }
 
 async function payOracleFeeButton(){
     let caller = document.getElementById('address-input').value;
     if (!utils.validateAddress(caller)){
-        utils.print("Action: Pay Oracle Fee\nInvalid address");
+        utils.print("Action: Pay Oracle Fee\nYour address is invalid (the address you are making the tx from)");
         return;
     }
 
@@ -28932,12 +28949,13 @@ async function payOracleFeeButton(){
         return;
     }
 
-    let fee = (oracleData.ownerDeposit / 1e18 * feeRate + 0.00001).toFixed(5);
+    let fee = await feeForOracle(oracleData);
     
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, fee, "payOracleFee", [{"index": 0, "format": "hex", "value": oracle}]);
 
-    console.log(utils.generateDnaLink(tx));
-    window.open(utils.generateDnaLink(tx), '_blank');
+    let dnaLink = utils.generateDnaLink(tx, "payOracleFee");
+    console.log(dnaLink);
+    window.open(dnaLink, '_blank');
 }
 
 async function getOracleDataButton(){
@@ -28962,7 +28980,7 @@ async function getOracleDataButton(){
                          `Oracle: ${oracle}\n` +
                          `Is oracle approved?: ${oracleData.isApproved ? "Yes" : "No"}\n` +
                          `Is oracle funded and has fee paid?: ${oracleData.feePaid && oracleData.isFunded ? "Yes" : "No"}\n` +
-                         `Fee required: ${(oracleData.ownerDeposit / 1e18 * feeRate).toFixed(5)} iDNA`;
+                         `Fee required: ${await feeForOracle(oracleData)} iDNA`;
 
     utils.print(consoleMessage);
 }
@@ -28975,7 +28993,7 @@ async function getReviewCommitteeButton(){
 async function approveOracleButton(){
     let caller = document.getElementById('address-input').value;
     if (!utils.validateAddress(caller)){
-        utils.print("Action: Approve Oracle\nInvalid address");
+        utils.print("Action: Approve Oracle\nYour address is invalid (the address you are making the tx from)");
         return;
     }
     
@@ -28991,10 +29009,17 @@ async function approveOracleButton(){
         return;
     }
 
+    let oracleStartTime = await rpc.getOracleStartTime(oracle);
+    if (oracleStartTime === undefined || (parseInt(oracleStartTime) + 3 * 7 * 24 * 60 * 60) * 1000 < Date.now()){
+        utils.print("Action: Approve Oracle\nOracle will be terminated in less than a week or doesn't exist :(");
+        return;
+    }
+
     let tx = await ctr.generateCallContractTx(caller, oracleLoanContract, "0", "approveOracle", [{"index": 0, "format": "hex", "value": oracle}]);
 
-    console.log(utils.generateDnaLink(tx));
-    window.open(utils.generateDnaLink(tx), '_blank');
+    let dnaLink = utils.generateDnaLink(tx, "approveOracle");
+    console.log(dnaLink);
+    window.open(dnaLink, '_blank');
 }
 
 module.exports = {
@@ -29013,6 +29038,7 @@ module.exports = {
 },{"./contract.js":98,"./rpc.js":100,"./utils.js":101}],100:[function(require,module,exports){
 const axios = require('axios');
 const utils = require('./utils.js');
+const idena = require('idena-sdk-js');
 
 const oracleLoanContract = utils.oracleLoanContract;
 const fallbackNodeUrl = "https://restricted.idena.io"
@@ -29142,8 +29168,10 @@ async function getBalance(address){
     };
     return await callRpc(data, localStorage.getItem('url'))
         .then((response) => {
-            let balance = parseInt(response.data.result, 16) / 1e18;
-            return balance ? balance : "0";
+            if (response.data.error)
+                return "0";
+            let balance = utils.dnaToFloatString(BigInt(response.data.result, 16).toString());
+            return balance;
         })
         .catch((error) => {
             utils.print(`Error: ${error}\n(check the api key)`);
@@ -29163,7 +29191,7 @@ async function verifyOracle(oracle){
             "id": 1,
             "key": localStorage.getItem('key')
         }, localStorage.getItem('url')).then((response) => {
-            return response.data.result;
+            return response.data.result || "0x";
         });
     }
 
@@ -29178,11 +29206,11 @@ async function verifyOracle(oracle){
     let publicVotingDuration = parseLittleEndianHexToInt(await readValue("publicVotingDuration"));
 
     if (refundRecipient.toLowerCase() != oracleLoanContract.toLowerCase())
-        return "Invalid refund recipient";
+        return "Invalid refund recipient, the owner address needs to be " + oracleLoanContract;
     if (ownerFee != 0)
-        return "Invalid owner fee";
+        return "Invalid owner fee, it should be set to 0.";
     if (parseInt(startTime, 16) > Date.now() + (60 * 60 * 24 * 14))
-        return "Invalid start time";
+        return "Invalid start time. The oracle can't start more than 14 days in the future, you can come back later with this oracle.";
     if (parseInt(votingDuration) + parseInt(publicVotingDuration) > (60 * 24 * 7 * 4 * 3))
         return "Invalid duration";
 
@@ -29225,6 +29253,27 @@ async function getContractState(){
         });
 }
 
+async function getOracleStartTime(oracle){
+    let data = {
+        "method": "contract_readData",
+        "params": [
+            oracle,
+            "startTime",
+            "uint64"
+        ],
+        "id": 1,
+        "key": localStorage.getItem('key')
+    };
+    return await callRpc(data, localStorage.getItem('url'))
+        .then((response) => {
+            return response.data.result;
+        })
+        .catch((error) => {
+            utils.print(`Error: ${error}\n(check the api key)`);
+            return undefined;
+        });
+}
+
 module.exports = {
     callRpc,
     getNonce,
@@ -29235,12 +29284,14 @@ module.exports = {
     getBalance,
     verifyOracle,
     getSmartContractBalance,
-    getContractState
+    getContractState,
+    getOracleStartTime
 }
 
-},{"./utils.js":101,"axios":13}],101:[function(require,module,exports){
+},{"./utils.js":101,"axios":13,"idena-sdk-js":78}],101:[function(require,module,exports){
 const oracleLoanContract = "0x7A891225f9BcA2BeC1B63b9b9B2765186ad501Fd";
-const callback_url = "https://oracle-loan.idena.cloud";
+const callback_url = "https://oracle-loan.idena.cloud/success.html";
+const proposedOracleCallback = callback_url + "/success.html?var=test";
 
 function hexToString(hex) {
     hex = hex.replace(/^0x/, '');
@@ -29252,19 +29303,54 @@ function hexToString(hex) {
     return str;
 }
 
+function dnaToFloatString(string, decimals = 18){
+    // for some reason dnaToFloatString from idena-sdk-js loses some precision (maybe I didn't use it properly?)
+    if (string == "0")
+        return "0";
+
+    let result;
+    if (string.length-decimals <= 0){
+        result = "0." + "0".repeat(decimals - string.length) + string;
+        result = result.replace(/0+$/, ''); // remove trailing zeros
+        return result;
+    }
+
+    result = string.slice(0,string.length - decimals) + "." + string.slice(string.length - decimals);
+    result = result.replace(/0+$/, ''); // remove trailing zeros
+    result = result.replace(/\.$/, ''); // remove trailing dot
+
+    return result;
+}
+
+function floatStringToDna(string){
+    let parts = string.split(".");
+    let integerPart = parts[0];
+    let decimalPart = parts[1] || "";
+
+    if (decimalPart.length < 18) {
+        decimalPart += "0".repeat(18 - decimalPart.length);
+    } else if (decimalPart.length > 18) {
+        decimalPart = decimalPart.slice(0, 18);
+    }
+
+    return integerPart + decimalPart;
+}
+
 function print(msg, showDate = true){
     let currentDate = new Date();
     let date = currentDate.toLocaleDateString();
     let time = currentDate.toLocaleTimeString();
 
+    msg = msg.replace(/\n/g, "<br>");
+
     if (showDate)
-        msg = `-----${date} ${time}-----\n${msg}`;
+        msg = `-----${date} ${time}-----<br>${msg}`;
     let outputConsole = document.getElementById('output-console');
-    outputConsole.value = msg + "\n\n" + outputConsole.value;
+    outputConsole.innerHTML = msg + "<br><br>" + outputConsole.innerHTML;
 }
 
 function clearConsole(){
-    document.getElementById('output-console').value = "";
+    document.getElementById('output-console').innerHTML = "";
 }
 
 function validateAddress(address){
@@ -29272,12 +29358,14 @@ function validateAddress(address){
     return addressRegex.test(address);
 }
 
-function generateDnaLink(tx){
-    return `https://app.idena.io/dna/raw?tx=${tx}&callback_format=html&callback_url=${callback_url}`;
+function generateDnaLink(tx, actionType){
+    return `https://app.idena.io/dna/raw?tx=${tx}&callback_format=html&callback_url=${callback_url}?action=${actionType}`;
 }
 
 module.exports = {
     hexToString,
+    dnaToFloatString,
+    floatStringToDna,
     print,
     clearConsole,
     validateAddress,

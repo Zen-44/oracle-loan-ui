@@ -1,5 +1,6 @@
 const axios = require('axios');
 const utils = require('./utils.js');
+const idena = require('idena-sdk-js');
 
 const oracleLoanContract = utils.oracleLoanContract;
 const fallbackNodeUrl = "https://restricted.idena.io"
@@ -129,8 +130,10 @@ async function getBalance(address){
     };
     return await callRpc(data, localStorage.getItem('url'))
         .then((response) => {
-            let balance = parseInt(response.data.result, 16) / 1e18;
-            return balance ? balance : "0";
+            if (response.data.error)
+                return "0";
+            let balance = utils.dnaToFloatString(BigInt(response.data.result, 16).toString());
+            return balance;
         })
         .catch((error) => {
             utils.print(`Error: ${error}\n(check the api key)`);
@@ -150,7 +153,7 @@ async function verifyOracle(oracle){
             "id": 1,
             "key": localStorage.getItem('key')
         }, localStorage.getItem('url')).then((response) => {
-            return response.data.result;
+            return response.data.result || "0x";
         });
     }
 
@@ -165,11 +168,11 @@ async function verifyOracle(oracle){
     let publicVotingDuration = parseLittleEndianHexToInt(await readValue("publicVotingDuration"));
 
     if (refundRecipient.toLowerCase() != oracleLoanContract.toLowerCase())
-        return "Invalid refund recipient";
+        return "Invalid refund recipient, the owner address needs to be " + oracleLoanContract;
     if (ownerFee != 0)
-        return "Invalid owner fee";
+        return "Invalid owner fee, it should be set to 0.";
     if (parseInt(startTime, 16) > Date.now() + (60 * 60 * 24 * 14))
-        return "Invalid start time";
+        return "Invalid start time. The oracle can't start more than 14 days in the future, you can come back later with this oracle.";
     if (parseInt(votingDuration) + parseInt(publicVotingDuration) > (60 * 24 * 7 * 4 * 3))
         return "Invalid duration";
 
@@ -212,6 +215,27 @@ async function getContractState(){
         });
 }
 
+async function getOracleStartTime(oracle){
+    let data = {
+        "method": "contract_readData",
+        "params": [
+            oracle,
+            "startTime",
+            "uint64"
+        ],
+        "id": 1,
+        "key": localStorage.getItem('key')
+    };
+    return await callRpc(data, localStorage.getItem('url'))
+        .then((response) => {
+            return response.data.result;
+        })
+        .catch((error) => {
+            utils.print(`Error: ${error}\n(check the api key)`);
+            return undefined;
+        });
+}
+
 module.exports = {
     callRpc,
     getNonce,
@@ -222,5 +246,6 @@ module.exports = {
     getBalance,
     verifyOracle,
     getSmartContractBalance,
-    getContractState
+    getContractState,
+    getOracleStartTime
 }
